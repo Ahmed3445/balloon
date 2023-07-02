@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Add some style to the body element */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: lightblue;
+      text-align: center;
+    }
+
+    /* Add some style to the h1 element */
+    h1 {
+      color: white;
+      font-size: 36px;
+      margin-top: 50px;
+    }
+
+    /* Add some style to the p element */
+    p {
+      color: white;
+      font-size: 24px;
+    }
+
+    /* Add some style to the div element that contains the balloons */
+    #balloons {
+      width: 800px;
+      height: 400px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background-image: url("clouds.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    /* Add some style to the img element that represents a balloon */
+    .balloon {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      bottom: -100px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    /* Add some style to the img element that represents a balloon when hovered */
+    .balloon:hover {
+      transform: scale(1.1);
+    }
+
+    /* Add some style to the img element that represents a popped balloon */
+    .popped {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      display: none;
+    }
+   
+
+
+@keyframes moveClouds {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -5000px 0;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <h1>Pop the Balloons</h1>
+  <p>Click on the balloons to pop them before they fly away.</p>
+  <p id="score">Score: 0</p>
+  <div id="balloons">
+  
+
+    <!-- Add some images of balloons and popped balloons -->
+    <img class="balloon" src="red-balloon.png" onclick="pop(this)">
+<img class="popped" src="popped.png">
+
+<img class="balloon" src="blue-balloon.png" onclick="pop(this)">
+<img class="popped" src="popped.png">
+
+<img class="balloon" src="green-balloon.png" onclick="pop(this)">
+<img class="popped" src="popped.png">
+
+<img class="balloon" src="yellow-balloon.png" onclick="pop(this)">
+<img class="popped" src="popped.png">
+
+     
+  <script>
+    // This game lets the user pop balloons with their mouse
+    // It uses variables, functions, arrays, loops, conditionals and events
+
+    // Get the score element from the document by its id
+    var score = document.getElementById("score");
+
+    // Get the balloons element from the document by its id
+    var balloons = document.getElementById("balloons");
+
+    // Get all the balloon elements from the document by their class name
+    var balloonElements = document.getElementsByClassName("balloon");
+
+    // Get all the popped elements from the document by their class name
+    var poppedElements = document.getElementsByClassName("popped");
+
+    // Convert the balloon elements and popped elements to arrays
+    var balloonArray = Array.from(balloonElements);
+    var poppedArray = Array.from(poppedElements);
+
+    // Define a variable to store the user's score
+    var userScore = 0;
+
+    // Define a function that takes a balloon element as a parameter and pops it
+    function pop(balloon) {
+      // Get the index of the balloon element in the balloon array
+      var index = balloonArray.indexOf(balloon);
+
+      // Hide the balloon element
+      balloon.style.display = "none";
+
+      // Show the corresponding popped element
+      poppedArray[index].style.display = "block";
+
+      // Set the position of the popped element to match the balloon element
+      poppedArray[index].style.left = balloon.style.left;
+      poppedArray[index].style.bottom = balloon.style.bottom;
+
+      // Increment the user's score by one
+      userScore++;
+
+      // Update the score element with the new score
+      score.textContent = "Score: " + userScore;
+
+      // Play a popping sound
+      var audio = new Audio("Balloon Pop Sound Effect.mp3");
+      audio.play();
+      
+       // Hide the popped element after one second
+       setTimeout(function() {
+        poppedArray[index].style.display = "none";
+       }, 1000);
+      
+       // Show a new balloon element after one second
+       setTimeout(function() {
+        showBalloon(balloon);
+       }, 1000);
+      
+    
+      
+    }
+
+    // Define a function that takes a balloon element as a parameter and shows it
+    function showBalloon(balloon) {
+      // Generate a random horizontal position between 0 and 700
+      var left = Math.floor(Math.random() * 700);
+
+      // Set the left property of the balloon element to the random position
+      balloon.style.left = left + "px";
+
+      // Show the balloon element
+      balloon.style.display = "block";
+
+      // Set the bottom property of the balloon element to -100
+      balloon.style.bottom = "-100px";
+
+      // Define a variable to store the vertical speed of the balloon
+      var speed = Math.floor(Math.random() * 5) + 1;
+
+      // Define a variable to store the interval id
+      var interval;
+
+      // Define a function that moves the balloon up by one pixel every 10 milliseconds
+      function moveUp() {
+        // Get the current bottom position of the balloon element
+        var bottom = parseInt(balloon.style.bottom);
+
+        // Increment the bottom position by the speed
+        bottom += speed;
+
+        // Set the new bottom position of the balloon element
+        balloon.style.bottom = bottom + "px";
+
+        // If the bottom position reaches 400, clear the interval and hide the balloon
+        if (bottom >= 400) {
+          clearInterval(interval);
+          balloon.style.display = "none";
+          
+          // Show a new balloon element after one second
+          setTimeout(function() {
+            showBalloon(balloon);
+          }, 1000);
+          
+          
+        }
+      }
+
+      // Set the interval to run the moveUp function every 10 milliseconds and store the id in the interval variable
+      interval = setInterval(moveUp, 10);
+    }
+
+    // Loop through each balloon element and show it
+    for (var i = 0; i < balloonArray.length; i++) {
+      showBalloon(balloonArray[i]);
+    }
+  </script>
+</body>
+</html>
+
+
+
+    
